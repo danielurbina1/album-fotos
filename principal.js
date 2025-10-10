@@ -11,8 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
     loginBox.style.display = 'block'; // Mejor usar style.display
   });
 
-  const USER = import.meta.env.VITE_USER;
-  const PASS = import.meta.env.VITE_PASS;
+  const USER = "nosotros";
+  const PASS = "danielmejor";
 
   loginBtn.addEventListener('click', () => {
     const u = document.getElementById('user').value.trim();
