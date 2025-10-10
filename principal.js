@@ -58,8 +58,8 @@ const images = [
   { src: "img/oporto3.jpg", nota: "6" },
   { src: "img/Patos.jpg", nota: "7" },
   { src: "img/Patos2.jpg", nota: "5" },
-  { src: "img/FotoBlanco1.jpg", nota: "6" },
-  { src: "img/FotoBlanco2.jpg", nota: "7" },
+  { src: "img/fotoBlanco1.jpg", nota: "6" },
+  { src: "img/fotoBlanco2.jpg", nota: "7" },
   { src: "img/Boda4.jpg", nota: "8" },
   { src: "img/fotoguapo.jpg", nota: "10" }
 ];
