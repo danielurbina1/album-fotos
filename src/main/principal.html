@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Álbum de Fotos 📸</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="diseño.css">
+<style>
+  body {
+    background: linear-gradient(to bottom, #e3e3e3, #e9e9e9, #ffffff, #cec9c9);
+    color: #333;
+  }
+
+  /* Pantalla principal */
+  #intro-screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    z-index: 50;
+    background: linear-gradient(to bottom, #f5f5f5, #e0e0e0, #d1d1d1);
+  }
+
+  /* Masonry */
+  #masonry {
+    display: flex;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+  .masonry-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  .masonry-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .masonry-item img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  }
+
+  /* Ocultar contenido principal por defecto */
+  #main-content { display: none; }
+
+  /* Animaciones */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fadeIn { animation: fadeIn 1s ease forwards; }
+  .animate-fadeIn.delay-200 { animation-delay: 0.2s; }
+
+  /* Sección intermedia */
+  #intro-main {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: linear-gradient(135deg, #e3e3e3, #d1d1d1, #f1f1f1, #f1ebeb);
+    color: #333;
+    text-align: center;
+  }
+
+  .floating-card {
+    position: absolute;
+    padding: 1rem;
+    background: rgba(255,255,255,0.85);
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 1rem;
+    backdrop-filter: blur(5px);
+    color: #333;
+    font-weight: 500;
+    transition: transform 0.5s, box-shadow 0.5s;
+    width: 220px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+  }
+  .floating-card:hover { 
+    transform: translateY(-5px) scale(1.03);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.25);
+  }
+  .floating-card input {
+    width: 100%;
+    padding: 0.25rem 0.5rem;
+    margin-bottom: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+  }
+  .floating-card button {
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+  }
+  .floating-card button:hover {
+    background-color: #2563eb;
+  }
+  .floating-card .feedback {
+    margin-top: 0.5rem;
+    font-weight: bold;
+    color: green;
+    display: none;
+  }
+
+  /* Carrusel */
+  #carousel {
+    display: flex;
+    transition: transform 0.7s;
+    width: 100%;  
+  }
+  #carousel img {
+    flex-shrink: 0;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 2rem;
+  }
+
+  /* ====== RESPONSIVE MOVIL ====== */
+  @media (max-width: 768px) {
+    #masonry {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.8rem;
+      width: 95%;
+      margin: 2rem auto;
+    }
+    .masonry-column {
+      display: contents;
+    }
+    .masonry-item {
+      border-radius: 0.5rem;
+      box-shadow: none;
+      background-color: transparent;
+    }
+    /* Ocultar etiquetas, inputs, botones y feedback en móvil */
+    .masonry-item p,
+    .masonry-item input,
+    .masonry-item button,
+    .masonry-item .feedback {
+      display: none !important;
+    }
+    /* Ajustes intro */
+    #intro-screen h1 { font-size: 2rem; }
+    #intro-screen p { font-size: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Pantalla principal -->
+<section id="intro-screen" class="fixed inset-0 flex items-center justify-center text-center z-50">
+  <div class="px-6">
+    <h1 class="text-5xl md:text-7xl font-extrabold tracking-wide">Mi Álbum de Fotos</h1>
+    <p class="mt-4 text-lg md:text-2xl max-w-2xl mx-auto">
+      Un espacio elegante y moderno para guardar y revivir recuerdos
+    </p>
+    
+    <button id="explore-btn" class="mt-8 bg-blue-500 text-white px-10 py-3 rounded-full shadow-lg hover:bg-blue-400 transition transform hover:scale-105">
+      Explorar ↓
+    </button>
+
+    <!-- LOGIN oculto -->
+    <div id="login-box" class="hidden mt-8 bg-white bg-opacity-90 p-6 rounded-2xl shadow-xl max-w-sm mx-auto">
+      <h2 class="text-2xl font-bold mb-4 text-gray-700">Inicia sesión 🔐</h2>
+      <input type="text" id="user" placeholder="Usuario" class="w-full border rounded px-3 py-2 mb-3">
+      <input type="password" id="pass" placeholder="Contraseña" class="w-full border rounded px-3 py-2 mb-3">
+      <button id="login-btn" class="bg-green-500 text-white w-full py-2 rounded hover:bg-green-400">Entrar</button>
+      <p id="login-error" class="text-red-500 font-bold mt-3 hidden">Usuario o contraseña incorrectos ❌</p>
+    </div>
+  </div>
+</section>
+
+<!-- Contenido principal -->
+<div id="main-content">
+
+  <!-- Sección intermedia con preguntas flotantes -->
+  <section id="intro-main">
+    <div class="relative z-10 text-center mb-6">
+      <h2 class="animate-fadeIn mb-3 text-4xl md:text-5xl font-extrabold text-blue-600 tracking-wide drop-shadow-md">
+        Nuestro Álbum
+      </h2>
+      <p class="animate-fadeIn delay-200 mb-5 text-lg md:text-xl text-gray-700 font-medium leading-relaxed drop-shadow-sm">
+        Responde correctamente y gana chiquipuntos mientras revives nuestros mejores recuerdos.
+      </p>
+      <button onclick="document.getElementById('masonry-section').scrollIntoView({behavior:'smooth'})"
+        class="bg-green-500 text-white px-8 py-3 rounded-full shadow-lg hover:bg-green-400 transition transform hover:scale-105">
+        Ir a la galería ↓
+      </button>
+    </div>
+
+    <!-- Preguntas flotantes -->
+    <div class="floating-card" style="top: 7%; left: 15%;">
+      <p>Pregunta 1: ¿Que dia empezamos a hablar?</p>
+      <input type="text" id="q1" />
+      <button onclick="checkAnswer('q1','19 de julio', this)">Enviar</button>
+      <p class="feedback"></p>
+    </div>
+    <div class="floating-card" style="top: 5%; right: 10%;">
+      <p>Pregunta 2: ¿Dónde fue nuestro primer beso?</p>
+      <input type="text" id="q2" />
+      <button onclick="checkAnswer('q2','En la cama', this)">Enviar</button>
+      <p class="feedback"></p>
+    </div>
+    <div class="floating-card" style="top: 35%; left: 20%;">
+      <p>Pregunta 3: ¿Primer regalo que te di?</p>
+      <input type="text" id="q3" />
+      <button onclick="checkAnswer('q3','Bombones', this)">Enviar</button>
+      <p class="feedback"></p>
+    </div>
+    <div class="floating-card" style="top: 35%; right: 20%;">
+      <p>Pregunta 4: ¿Película favorita que vimos juntos?</p>
+      <input type="text" id="q4" />
+      <button onclick="checkAnswer('q4','Harry potter', this)">Enviar</button>
+      <p class="feedback"></p>
+    </div>
+    <div class="floating-card" style="top: 16%; left: 48%;">
+      <p>Pregunta 5: Cual fue la mejor cita que hemos tenido</p>
+      <input type="text" id="q5" />
+      <button onclick="checkAnswer('q5','picnic', this)">Enviar</button>
+      <p class="feedback"></p>
+    </div>
+    <div class="floating-card" style="bottom: 18%; left: 40%;">
+      <p>Pregunta 6: ¿Postura favorita?</p>
+      <input type="text" id="q6" />
+      <button onclick="checkAnswer('q6','La isla', this)">Enviar</button>
+      <p class="feedback"></p>
+    </div>
+    <div class="floating-card" style="bottom: 10%; left: 10%;">
+      <p>Pregunta 7: ¿Mi mayor virtud?</p>
+      <input type="text" id="q7" />
+      <button onclick="checkAnswer('q7','Pene', this)">Enviar</button>
+      <p class="feedback"></p>
+    </div>
+    <div class="floating-card" style="bottom: 10%; right: 10%;">
+      <p>Pregunta 8: ¿Cuando es mi cumple?</p>
+      <input type="text" id="q8" />
+      <button onclick="checkAnswer('q8','8 de febrero', this)">Enviar</button>
+      <p class="feedback"></p>
+    </div>
+  </section>
+
+  <!-- Galería Masonry -->
+  <section id="masonry-section" class="max-w-full mx-auto mt-20 px-20">
+    <h2 class="text-3xl font-semibold text-gray-900 mb-6 text-center">Galería, nuestras fotos</h2>
+    <div id="masonry"></div>
+  </section>
+
+  <!-- Carrusel y planes (sin cambios) -->
+  <section class="max-w-6xl mx-auto mt-32 mb-32 px-6">
+    <h2 class="text-4xl md:text-5xl font-extrabold text-center text-blue-600 mb-16 drop-shadow-md">
+      ✨ Planes para realizar ✨
+    </h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-60 items-start">
+      <div class="relative w-full overflow-hidden rounded-lg shadow-lg">
+        <div id="carousel" class="flex transition-transform duration-500">
+          <img src="img/Foto1.jpg" class="w-full object-cover" alt="Foto 1">
+          <img src="img/Fotoboda1.jpg" class="w-full object-cover" alt="Foto 2">
+          <img src="img/FotoBoda2.jpg" class="w-full object-cover" alt="Foto 3">
+          <img src="img/Fotoboda3.jpg" class="w-full object-cover" alt="Foto 4">
+          <img src="img/FotoDaniel.jpg" class="w-full object-cover" alt="Foto 5">
+          <img src="img/Fotooporto.jpg" class="w-full object-cover" alt="Foto 6">
+          <img src="img/Fotozhen.png" class="w-full object-cover" alt="Foto 7">
+          <img src="img/Fotozhenboda.jpg" class="w-full object-cover" alt="Foto 8">
+          <img src="img/fotopico.jpg" class="w-full object-cover" alt="Foto 8">
+        </div>
+        <button id="prev" class="absolute top-1/2 left-4 transform -translate-y-1/2 bg-black bg-opacity-40 text-white px-3 py-2 rounded-full">‹</button>
+        <button id="next" class="absolute top-1/2 right-4 transform -translate-y-1/2 bg-black bg-opacity-40 text-white px-3 py-2 rounded-full">›</button>
+      </div>
+
+      <!-- Planes -->
+      <div>
+        <h3 class="text-2xl font-bold text-center text-gray-800 mb-8">
+          🌟 Planes para nuestro segundo año juntos 🌟
+        </h3>
+        <ul class="space-y-6">
+          <li class="flex items-center bg-white p-4 rounded-lg shadow hover:shadow-md transition">
+            <input type="checkbox" id="plan1" class="w-5 h-5 text-blue-500 rounded mr-3">
+            <label for="plan1" class="text-gray-700">Hacer un viaje a la montaña 🏔️</label>
+          </li>
+          <li class="flex items-center bg-white p-4 rounded-lg shadow hover:shadow-md transition">
+            <input type="checkbox" id="plan2" class="w-5 h-5 text-blue-500 rounded mr-3">
+            <label for="plan2" class="text-gray-700">Probar un restaurante nuevo 🍣</label>
+          </li>
+          <li class="flex items-center bg-white p-4 rounded-lg shadow hover:shadow-md transition">
+            <input type="checkbox" id="plan3" class="w-5 h-5 text-blue-500 rounded mr-3">
+            <label for="plan3" class="text-gray-700">Hacer un picnic en el parque 🌳</label>
+          </li>
+          <li class="flex items-center bg-white p-4 rounded-lg shadow hover:shadow-md transition">
+            <input type="checkbox" id="plan4" class="w-5 h-5 text-blue-500 rounded mr-3">
+            <label for="plan4" class="text-gray-700">Ver juntos una maratón de pelis 🎬</label>
+          </li>
+          <li class="flex items-center bg-white p-4 rounded-lg shadow hover:shadow-md transition">
+            <input type="checkbox" id="plan5" class="w-5 h-5 text-blue-500 rounded mr-3">
+            <label for="plan5" class="text-gray-700">Dormir bajo las estrellas ✨</label>
+          </li>
+          <li class="flex items-center bg-white p-4 rounded-lg shadow hover:shadow-md transition"> <input type="checkbox" id="plan6" class="w-5 h-5 text-blue-500 rounded mr-3"> <label for="plan6" class="text-gray-700">Cocinar juntos una receta difícil 👩‍🍳</label> </li> <li class="flex items-center bg-white p-4 rounded-lg shadow hover:shadow-md transition"> <input type="checkbox" id="plan5" class="w-5 h-5 text-blue-500 rounded mr-3"> <label for="plan5" class="text-gray-700">Cocinar para el otro</label> </li> <li class="flex items-center bg-white p-4 rounded-lg shadow hover:shadow-md transition"> <input type="checkbox" id="plan6" class="w-5 h-5 text-blue-500 rounded mr-3"> <label for="plan6" class="text-gray-700">Pintar las tortugas</label> </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contador de tiempo juntos -->
+  <section class="max-w-3xl mx-auto mt-20 mb-12 px-6 text-center">
+    <h2 class="text-3xl md:text-4xl font-extrabold text-pink-500 mb-6 drop-shadow-md">
+      ❤️ Nuestro tiempo juntos ❤️
+    </h2>
+    <p class="text-xl text-gray-700" id="contador-tiempo">
+      Llevamos 0 años, 0 meses y 0 días sobreviviendo a nosotros mismos❤️
+    </p>
+  </section>
+
+  <!-- Botón sorpresa -->
+  <section class="max-w-3xl mx-auto mb-20 px-6 text-center">
+    <button id="boton-sorpresa" class="bg-pink-500 text-white text-xl px-8 py-4 rounded-full shadow-lg hover:bg-pink-400 transition transform hover:scale-105">
+      Revelar mensaje secreto 💌
+    </button>
+    <p id="mensaje-secreto" class="mt-6 text-lg text-gray-800 font-semibold hidden">
+      Enserio creias que seguiria funcionando? Anda te quiero mucho pero no soy bobo
+    </p>
+  </section>
+
+</div>
+
+<script src="principal.js"></script>
+</body>
+</html>

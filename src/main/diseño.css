@@ -1,0 +1,175 @@
+/* Fuente base */
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(to bottom, #e3e3e3, #e9e9e9, #ffffff, #cec9c9);
+  color: #333;
+}
+
+/* Animación suave al cargar imágenes */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fadeIn {
+  animation: fadeIn 1s ease-in-out;
+}
+
+/* Pantalla principal */
+#intro-screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  z-index: 50;
+  background: linear-gradient(to bottom, #f5f5f5, #e0e0e0, #d1d1d1);
+  height: 100vh;
+  padding: 2rem;
+}
+
+/* Botón explorar */
+#explore-btn {
+  font-size: 1.2rem;
+}
+
+/* Login box */
+#login-box {
+  display: none;
+  margin-top: 1rem;
+  background: rgba(255,255,255,0.95);
+  padding: 1.5rem;
+  border-radius: 1rem;
+  max-width: 320px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+#login-box input {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+}
+#login-box button {
+  width: 100%;
+  padding: 0.5rem;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+#login-box button:hover {
+  background-color: #2563eb;
+}
+
+/* Ocultar contenido principal por defecto */
+#main-content { display: none; }
+
+/* ========== GALERÍA RESPONSIVE ========== */
+#masonry {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem auto;
+  width: 90%;
+  max-width: 1400px;
+}
+
+.masonry-item {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1rem;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.masonry-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 1rem;
+  transition: transform 0.3s ease-in-out;
+}
+
+.masonry-item:hover img {
+  transform: scale(1.05);
+}
+
+/* Etiquetas y notas en escritorio */
+.masonry-item .masonry-label,
+.masonry-item .masonry-input,
+.masonry-item .masonry-btn,
+.masonry-item .masonry-feedback {
+  display: block;
+}
+
+/* Carrusel */
+#carousel {
+  display: flex;
+  transition: transform 0.7s;
+  width: 100%;  
+}
+#carousel img {
+  flex-shrink: 0;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 1rem;
+}
+
+/* ========== VERSIÓN MÓVIL ========== */
+@media (max-width: 768px) {
+  /* Masonry dos por fila */
+  #masonry {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 fotos por fila */
+    gap: 0.5rem; /* menos espacio */
+    width: 100%; /* ocupa todo el ancho */
+    margin: 0.5rem auto;
+  }
+  #masonry-section {
+    padding: 0 1rem; /* menos espacio a los lados */
+  }
+  .masonry-item {
+    padding: 0; /* elimina padding para que la imagen ocupe todo */
+  }
+
+  .masonry-item img {
+    width: 100%;
+    height: auto;
+    max-height: none; /* deja que crezca según el ancho */
+  }
+
+  /* Ocultar etiquetas, inputs, botones y feedback en móvil */
+  .masonry-item .masonry-label,
+  .masonry-item .masonry-input,
+  .masonry-item .masonry-btn,
+  .masonry-item .masonry-feedback {
+    display: none !important;
+  }
+
+  /* Ajustes generales */
+  body {
+    font-size: 15px;
+    padding-bottom: 4rem;
+  }
+
+  #intro-screen h1 {
+    font-size: 2rem;
+  }
+
+  #intro-screen p {
+    font-size: 1rem;
+  }
+
+  /* Carrusel se adapta */
+  #carousel img {
+    border-radius: 0.5rem;
+  }
+}
+@media (max-width: 768px) {
+  .floating-card {
+    display: none !important;
+  }
+}
