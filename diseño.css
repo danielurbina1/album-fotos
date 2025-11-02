@@ -173,3 +173,40 @@ body {
     display: none !important;
   }
 }
+
+#halloween img {
+  border: 3px solid orange;
+  border-radius: 1rem;
+  box-shadow: 0 0 15px rgba(255, 140, 0, 0.6);
+}
+
+#halloween h2 {
+  text-shadow: 0 0 15px orange;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { text-shadow: 0 0 10px orange; }
+  50% { text-shadow: 0 0 25px orangered; }
+}
+
+#halloween h2.animate-pulse {
+  animation: pulseGlow 2s infinite;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  #halloween-gallery {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.8rem;
+  }
+  #halloween .max-h-\[380px\] {
+    max-height: 480px !important; /* antes 380px */
+  }
+  #halloween img {
+    max-height: 460px;
+  }
+
+  #halloween h2 {
+    font-size: 2rem;
+  }
+}
