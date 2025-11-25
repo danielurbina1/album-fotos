@@ -61,7 +61,13 @@ const images = [
   { src: "img/fotoBlanco1.jpg", nota: "6" },
   { src: "img/fotoBlanco2.jpg", nota: "7" },
   { src: "img/Boda4.jpg", nota: "8" },
-  { src: "img/fotoguapo.jpg", nota: "10" }
+  { src: "img/fotoguapo.jpg", nota: "10" },
+  { src: "img/noche de juegos.jpg", nota: "10" },
+  { src: "img/noche de juegos 2.jpg", nota: "10" },
+  { src: "img/noche de juegos 3.jpg", nota: "10" },
+
+ 
+
 ];
 
 const masonry = document.getElementById("masonry");
